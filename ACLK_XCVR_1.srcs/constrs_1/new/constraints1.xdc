@@ -1,0 +1,72 @@
+set_property PACKAGE_PIN C3 [get_ports CLK_25MHZ]
+set_property PACKAGE_PIN Y6 [get_ports CLK_156MHZ_IN_p]
+set_property PACKAGE_PIN E12 [get_ports ERROR_INPUTn]
+set_property IOSTANDARD LVCMOS33 [get_ports ERROR_INPUTn]
+set_property IOSTANDARD LVCMOS18 [get_ports CLK_25MHZ]
+set_property PULLUP true [get_ports ERROR_INPUTn]
+set_property PACKAGE_PIN F8 [get_ports LED_UF1]
+set_property PACKAGE_PIN E8 [get_ports LED_UF2]
+set_property IOSTANDARD LVCMOS18 [get_ports LED_UF1]
+set_property IOSTANDARD LVCMOS18 [get_ports LED_UF2]
+set_property PACKAGE_PIN J11 [get_ports PMOD2_1]
+set_property PACKAGE_PIN J10 [get_ports PMOD2_3]
+set_property IOSTANDARD LVCMOS33 [get_ports PMOD2_1]
+set_property IOSTANDARD LVCMOS33 [get_ports PMOD2_3]
+set_property PACKAGE_PIN K13 [get_ports PMOD2_5]
+set_property IOSTANDARD LVCMOS33 [get_ports PMOD2_5]
+set_property PACKAGE_PIN K12 [get_ports PMOD2_7]
+set_property IOSTANDARD LVCMOS33 [get_ports PMOD2_7]
+set_property PACKAGE_PIN B10 [get_ports RESETn]
+set_property IOSTANDARD LVCMOS33 [get_ports RESETn]
+set_property PULLUP true [get_ports RESETn]
+set_property PACKAGE_PIN Y10 [get_ports SFP_TXDIS]
+set_property IOSTANDARD LVCMOS33 [get_ports SFP_TXDIS]
+set_property PACKAGE_PIN W13 [get_ports UART_RX]
+set_property PACKAGE_PIN W14 [get_ports UART_TX]
+set_property IOSTANDARD LVCMOS33 [get_ports UART_RX]
+set_property IOSTANDARD LVCMOS33 [get_ports UART_TX]
+create_clock -period 6.400 -name CLK_156MHZ_IN_p -waveform {0.000 3.200} [get_ports CLK_156MHZ_IN_p]
+create_clock -period 40.000 -name CLK_25MHZ -waveform {0.000 20.000} [get_ports CLK_25MHZ]
+
+create_clock -period 12.300 -name CLK_81R25MHZ_rx_buffered -waveform {0.000 6.150} [get_pins uACLK_RCV/CLK_81R25MHZ_rx_buffered]
+create_clock -period 12.300 -name CLK_81R25MHZ_tx_buffered -waveform {0.000 6.150} [get_nets -hierarchical *CLK_81R25MHZ_tx_buffered*]
+
+set_false_path -from [get_pins {uACLK_RCV/uRX_GEARBOX/uRX_DATASYNC/regQ_del2_reg[*]/C}] -to [get_pins {uACLK_RCV/uRX_GEARBOX/uRX_DATASYNC/DATA_OUT_int_reg[*]/D}]
+set_false_path -from [get_pins {uACLK_RCV/uRX_GEARBOX/uRX_DATASYNC/regQ_del1_reg[*]/C}] -to [get_pins {uACLK_RCV/uRX_GEARBOX/uRX_DATASYNC/DATA_OUT_int_reg[*]/D}]
+set_false_path -from [get_pins {uACLK_RCV/uRX_GEARBOX/uRX_DATASYNC/regQ_del3_reg[*]/C}] -to [get_pins {uACLK_RCV/uRX_GEARBOX/uRX_DATASYNC/DATA_OUT_int_reg[*]/D}]
+set_false_path -from [get_pins {uACLK_RCV/uRX_GEARBOX/uRX_DATASYNC/regQ_del4_reg[*]/C}] -to [get_pins {uACLK_RCV/uRX_GEARBOX/uRX_DATASYNC/DATA_OUT_int_reg[*]/D}]
+
+set_false_path -from [get_pins uACLK_RCV/uRX_GEARBOX/uRX_DATASYNC/sync64_reg/C] -to [get_pins uACLK_RCV/uRX_GEARBOX/uRX_DATASYNC/sync64_cap_reg/D]
+
+set_multicycle_path -from [get_pins uACLK_RCV/uRX_BITSLIP_CTRL/BYTESLIP_reg/C] -to [get_pins uACLK_RCV/uRX_GEARBOX/BYTESLIP_cap_reg/D] 2
+set_multicycle_path -from [get_pins uACLK_RCV/uRX_BITSLIP_CTRL/bitslip72_reg/C] -to [get_pins {uGT_XCVR/inst/gen_gtwizard_gthe4_top.gtwizard_ultrascale_0_gtwizard_gthe4_inst/gen_gtwizard_gthe4.gen_channel_container[1].gen_enabled_channel.gthe4_channel_wrapper_inst/channel_inst/gthe4_channel_gen.gen_gthe4_channel_inst[0].GTHE4_CHANNEL_PRIM_INST/RXSLIDE}] 2
+
+create_generated_clock -name CLK_80RX -source [get_pins uACLK_RCV/CLK_81R25MHZ_rx_buffered] -divide_by 585 -multiply_by 576 [get_nets uPLL_RX/inst/clk_out1_clk_wiz_81R25_to_80MHz]
+create_generated_clock -name CLK_80TX -source [get_pins uBUF_CLK_81R25MHZ_tx/O] -divide_by 585 -multiply_by 576 [get_nets uPLL_TX/inst/clk_out1_clk_wiz_81R25_to_80MHz]
+
+set_multicycle_path -from [get_pins uACLK_RCV/uRX_BITSLIP_CTRL/bitslip72_reg/C] -to [get_pins {uGT_XCVR/inst/gen_gtwizard_gthe4_top.gtwizard_ultrascale_0_gtwizard_gthe4_inst/gen_gtwizard_gthe4.gen_channel_container[1].gen_enabled_channel.gthe4_channel_wrapper_inst/channel_inst/gthe4_channel_gen.gen_gthe4_channel_inst[0].GTHE4_CHANNEL_PRIM_INST/RXSLIDE}] 2
+set _xlnx_shared_i0 [get_pins {uACLK_DATA_SOURCE/uTX_GEARBOX/data128_reg[*]/D}]
+set_multicycle_path -from [get_pins {uACLK_DATA_SOURCE/uTX_GEARBOX/regQ_del2_reg[*]/C}] -to $_xlnx_shared_i0 2
+set_multicycle_path -from [get_pins {uACLK_DATA_SOURCE/uTX_GEARBOX/regQ_del3_reg[*]/C}] -to $_xlnx_shared_i0 2
+set_multicycle_path -from [get_pins {uACLK_DATA_SOURCE/uTX_GEARBOX/regQ_del1_reg[*]/C}] -to $_xlnx_shared_i0 2
+
+set_property PACKAGE_PIN AE12 [get_ports PMOD3_1]
+set_property PACKAGE_PIN AF12 [get_ports PMOD3_3]
+set_property PACKAGE_PIN AG10 [get_ports PMOD3_5]
+set_property PACKAGE_PIN AH10 [get_ports PMOD3_7]
+set_property OFFCHIP_TERM NONE [get_ports LED_UF1]
+set_property OFFCHIP_TERM NONE [get_ports LED_UF2]
+set_property OFFCHIP_TERM NONE [get_ports PMOD2_1]
+set_property OFFCHIP_TERM NONE [get_ports PMOD2_3]
+set_property OFFCHIP_TERM NONE [get_ports PMOD2_5]
+set_property OFFCHIP_TERM NONE [get_ports PMOD2_7]
+set_property OFFCHIP_TERM NONE [get_ports PMOD3_1]
+set_property OFFCHIP_TERM NONE [get_ports PMOD3_3]
+set_property OFFCHIP_TERM NONE [get_ports PMOD3_5]
+set_property OFFCHIP_TERM NONE [get_ports PMOD3_7]
+set_property OFFCHIP_TERM NONE [get_ports SFP_TXDIS]
+set_property OFFCHIP_TERM NONE [get_ports UART_TX]
+set_property IOSTANDARD LVCMOS33 [get_ports PMOD3_1]
+set_property IOSTANDARD LVCMOS33 [get_ports PMOD3_3]
+set_property IOSTANDARD LVCMOS33 [get_ports PMOD3_5]
+set_property IOSTANDARD LVCMOS33 [get_ports PMOD3_7]
